@@ -36,6 +36,6 @@ class YleClientITest {
     @Test
     @Disabled("Only for manual testing")
     fun candidate() = runBlocking {
-        println(client.candidate(114, 5208))
+        println(client.candidate(301, 6861))
     }
 }

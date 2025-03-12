@@ -45,7 +45,7 @@ data class Party(
         val EMPTY = Party(0, "")
     }
 
-    override fun compareTo(other: Party): Int = compareValuesBy(this, other, { it.shortName })
+    override fun compareTo(other: Party): Int = compareValuesBy(this, other) { it.shortName }
 }
 
 data class Category(
@@ -58,7 +58,7 @@ data class Question(
     @SerializedName("text_fi")
     val text: String,
 ): Comparable<Question> {
-    override fun compareTo(other: Question): Int = compareValuesBy(this, other, { it.id })
+    override fun compareTo(other: Question): Int = compareValuesBy(this, other) { it.id }
 }
 
 data class Answer(

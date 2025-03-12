@@ -6,12 +6,15 @@ import java.util.TreeMap
 
 val aamulehtiService = AamulehtiService()
 
-suspend fun main() {
-    printAamulehti()
+suspend fun main(args: Array<String>) {
+    val municipality = Municipality.entries.find {
+        it.label == args.getOrNull(0)?.lowercase()?.replaceFirstChar { it.uppercaseChar() } || false
+    }
+    printAamulehti(municipality)
 }
 
-suspend fun printAamulehti() {
-    Municipality.entries.forEach { municipality ->
+suspend fun printAamulehti(municipality: Municipality?) {
+    Municipality.entries.filter { municipality == null || municipality == it }.forEach { municipality ->
         val questions = aamulehtiService.questions(municipality, Brand.AAMULEHTI)
         val answers = aamulehtiService.answers(municipality, questions)
         println(municipality.label)
@@ -30,7 +33,7 @@ private fun printMunicipality(questions: List<Question>, answers: SortedMap<Cand
 }
 
 private fun printQuestionRow(questions: List<Question>) {
-    val questionsRow = "\t\t${questions.joinToString("\t", transform = { it.text })}"
+    val questionsRow = "\t\t${questions.sorted().joinToString("\t", transform = { it.text })}"
     println(questionsRow)
 }
 

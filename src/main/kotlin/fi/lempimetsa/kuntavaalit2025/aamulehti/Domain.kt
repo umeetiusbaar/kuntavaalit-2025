@@ -37,7 +37,7 @@ data class Question(
     fun isBrand(brand: Brand) = this.brand.contains(brand.shortName)
 
     override fun compareTo(other: Question): Int {
-        return compareValuesBy(this, other, { it.id })
+        return compareValuesBy(this, other) { it.id }
     }
 }
 

@@ -17,7 +17,7 @@ class AamulehtiClient {
 
     suspend fun candidates(): CandidatesResponsePageProps {
         val response: CandidatesResponse =
-            client.get("https://www.vaalikone.fi/_next/data/IYqExYjFyZodhxQG4APcY/kunta2025/al/candidates.json?election=kunta2025&brand=al")
+            client.get("https://www.vaalikone.fi/_next/data/bboNDvPY6f3ABwiDoGUP5/kunta2025/al/candidates.json?election=kunta2025&brand=al")
                 .body()
         return response.pageProps
     }
@@ -31,7 +31,7 @@ class AamulehtiClient {
 
     suspend fun candidateQuestions(candidate: Candidate): CandidateResponsePageProps {
         val response: CandidateResponse =
-            client.get("https://www.vaalikone.fi/_next/data/IYqExYjFyZodhxQG4APcY/kunta2025/al/candidates/${candidate.id}.json?election=kunta2025&brand=al&id=${candidate.id}")
+            client.get("https://www.vaalikone.fi/_next/data/bboNDvPY6f3ABwiDoGUP5/kunta2025/al/candidates/${candidate.id}.json?election=kunta2025&brand=al&id=${candidate.id}")
                 .body()
         return response.pageProps
     }

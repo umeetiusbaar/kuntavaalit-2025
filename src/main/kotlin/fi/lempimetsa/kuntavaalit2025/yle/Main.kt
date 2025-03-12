@@ -2,17 +2,26 @@ package fi.lempimetsa.kuntavaalit2025.yle
 
 import fi.lempimetsa.kuntavaalit2025.med
 import fi.lempimetsa.kuntavaalit2025.yle.Constituency.Companion.CONSTITUENCIES
+import fi.lempimetsa.kuntavaalit2025.yle.Constituency.Companion.LEMPAALA
+import fi.lempimetsa.kuntavaalit2025.yle.Constituency.Companion.PIRKKALA
+import fi.lempimetsa.kuntavaalit2025.yle.Constituency.Companion.TAMPERE
 import java.util.SortedMap
 import java.util.TreeMap
 
 val yleService = YleService()
 
-suspend fun main() {
-    print()
+suspend fun main(args: Array<String>) {
+    val constituency = when (args.getOrNull(0)?.lowercase()) {
+        "lempäälä" -> LEMPAALA
+        "pirkkala" -> PIRKKALA
+        "tampere" -> TAMPERE
+        else -> null
+    }
+    print(constituency)
 }
 
-suspend fun print() {
-    CONSTITUENCIES.forEach { constituency ->
+suspend fun print(constituency: Constituency?) {
+    CONSTITUENCIES.filter { constituency == null || constituency == it }.forEach { constituency ->
         val questions = yleService.questions(constituency)
         val answers = yleService.answers(constituency, questions)
         println(constituency.name)
@@ -31,7 +40,7 @@ private fun printMunicipality(questions: List<Question>, answers: SortedMap<Cand
 }
 
 private fun printQuestionRow(questions: List<Question>) {
-    val questionsRow = "\t\t${questions.joinToString("\t", transform = { it.text })}"
+    val questionsRow = "\t\t${questions.sorted().joinToString("\t", transform = { it.text })}"
     println(questionsRow)
 }
 
