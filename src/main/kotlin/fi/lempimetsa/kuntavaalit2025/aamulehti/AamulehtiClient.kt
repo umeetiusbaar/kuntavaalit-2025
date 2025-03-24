@@ -15,9 +15,14 @@ class AamulehtiClient {
         }
     }
 
+    var buildId: String? = null
+
     suspend fun candidates(): CandidatesResponsePageProps {
+        if (buildId == null) {
+            initializeBuildId()
+        }
         val response: CandidatesResponse =
-            client.get("https://www.vaalikone.fi/_next/data/bboNDvPY6f3ABwiDoGUP5/kunta2025/al/candidates.json?election=kunta2025&brand=al")
+            client.get("https://www.vaalikone.fi/_next/data/$buildId/kunta2025/al/candidates.json?election=kunta2025&brand=al")
                 .body()
         return response.pageProps
     }
@@ -31,8 +36,15 @@ class AamulehtiClient {
 
     suspend fun candidateQuestions(candidate: Candidate): CandidateResponsePageProps {
         val response: CandidateResponse =
-            client.get("https://www.vaalikone.fi/_next/data/bboNDvPY6f3ABwiDoGUP5/kunta2025/al/candidates/${candidate.id}.json?election=kunta2025&brand=al&id=${candidate.id}")
+            client.get("https://www.vaalikone.fi/_next/data/$buildId/kunta2025/al/candidates/${candidate.id}.json?election=kunta2025&brand=al&id=${candidate.id}")
                 .body()
         return response.pageProps
+    }
+
+    private suspend fun initializeBuildId() {
+        val response = client.get("https://www.vaalikone.fi/kunta2025/al").body<String>()
+        val regex = """"buildId":\s*"([^"]+)"""".toRegex()
+        val matchResult = regex.find(response) ?: throw RuntimeException("Build ID not found")
+        this.buildId = matchResult.groupValues[1]
     }
 }

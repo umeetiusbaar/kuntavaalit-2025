@@ -1,6 +1,6 @@
 package fi.lempimetsa.kuntavaalit2025
 
-fun med(list: List<Int>) = list.sorted().let {
+fun med(list: List<Int>?) = list?.sorted()?.let {
     val size = it.size
     if (size % 2 == 0) {
         (it[size / 2 - 1] + it[size / 2]) / 2
@@ -8,15 +8,42 @@ fun med(list: List<Int>) = list.sorted().let {
         it[size / 2]
     }
 }
+    ?: 0
 
-fun fullName(firstName: String, lastName: String) : String {
-    var formattedFirstName =
-        firstName.trim().split(" ").joinToString(" ") { it.lowercase().replaceFirstChar { it.uppercaseChar() } }
-    formattedFirstName =
-        formattedFirstName.split("-").joinToString("-") { it.trim().replaceFirstChar { it.uppercaseChar() } }
-    var formattedLastName =
-        lastName.trim().split(" ").joinToString(" ") { it.lowercase().replaceFirstChar { it.uppercaseChar() } }
-    formattedLastName =
-        formattedLastName.split("-").joinToString("-") { it.trim().replaceFirstChar { it.uppercaseChar() } }
-    return "$formattedFirstName $formattedLastName"
+fun fullName(firstName: String, lastName: String): String = "$firstName $lastName"
+
+fun String.adjustFirstName(municipality: Municipality, lastName: String): String {
+    return when {
+        (this.trim() == "EelisSebastian" || this.trim() == "Hoffrén") -> "Eelis Sebastian"
+        (this.trim() == "Rauno (Rane)") -> "Rauno"
+        (municipality == Municipality.TAMPERE && lastName.trim() == "Blom" && this.trim() == "Marko") -> "Petteri"
+        (municipality == Municipality.TAMPERE && lastName.trim() == "Laitinen" && this.trim() == "Kari") -> "Kimmo"
+        (municipality == Municipality.TAMPERE && lastName.trim() == "Lohiniemi" && this.trim() == "Terhi") -> "Susanna"
+        (municipality == Municipality.TAMPERE && lastName.trim() == "Nyman" && this.trim() == "Maria") -> "Elina"
+        (municipality == Municipality.TAMPERE && lastName.trim() == "Sirkesalo" && this.trim() == "Johanna") -> "Sohvi"
+        (municipality == Municipality.TAMPERE && lastName.trim() == "Osinnaike") -> "Samuel"
+        else ->
+            this.trim().replace(".", "").split(" ")
+                .joinToString(" ") { it.lowercase().replaceFirstChar { it.uppercaseChar() } }.split("-")
+                .joinToString("-") { it.trim().replaceFirstChar { it.uppercaseChar() } }
+    }
+}
+
+fun String.adjustLastName(municipality: Municipality, party: Party, firstName: String): String {
+    return when {
+        this.trim() == "Eelis sebastian" -> "Hoffrén"
+        municipality == Municipality.TAMPERE && party == Party.VIHR && this == "Silven" && firstName == "Paula" -> "Silvén"
+        else ->
+            this.trim().split(" ").joinToString(" ") { it.lowercase().replaceFirstChar { it.uppercaseChar() } }
+                .split("-")
+                .joinToString("-") { it.trim().replaceFirstChar { it.uppercaseChar() } }
+    }
+}
+
+fun Int.adjustNumber(municipality: Municipality, firstName: String, lastName: String): Int {
+    return when {
+        municipality == Municipality.LEMPAALA && firstName == "Ari" && lastName == "Niemelä" -> 43
+        municipality == Municipality.TAMPERE && firstName == "Seppo" && lastName == "Lehto" -> 573
+        else -> this
+    }
 }

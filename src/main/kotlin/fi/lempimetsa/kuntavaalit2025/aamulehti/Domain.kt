@@ -8,6 +8,10 @@ enum class Municipality(val code: Int, val themes: List<Int>, val label: String)
     LEMPAALA(418, COMMONT_THEMES + 16, "Lempäälä"),
     PIRKKALA(604, COMMONT_THEMES + 21, "Pirkkala"),
     TAMPERE(837, COMMONT_THEMES + listOf(8, 64), "Tampere");
+
+    companion object {
+        fun valueOfName(name: String) = entries.first { it.label.equals(name, true) }
+    }
 }
 
 enum class Brand(val shortName: String) {
@@ -46,32 +50,19 @@ data class Candidate(
     val lastName: String,
     val firstName: String,
     val party: String,
+    val partyObject: Party,
+    val candidateNumber: Int,
+    val postalCodeArea: String,
 ) : Comparable<Candidate> {
     override fun compareTo(other: Candidate): Int {
         return compareValuesBy(this, other, { it.lastName.trim() }, { it.firstName.trim() })
     }
-
-    fun fullName() = fi.lempimetsa.kuntavaalit2025.fullName(firstName, lastName)
 }
 
-enum class Answer(val value: Int) {
-    NOT_ANSWERED(0),
-    STRONGLY_DISAGREE(1),
-    SOMEWHAT_DISAGREE(2),
-    NEITHER_AGREE_NOR_DISAGREE(3),
-    SOMEWHAT_AGREE(4),
-    STRONGLY_AGREE(5), ;
-
-    companion object {
-        fun valueOfNumber(number: Int): Answer {
-            return try {
-                entries.first { it.value == number }
-            } catch (_: NoSuchElementException) {
-                throw IllegalArgumentException("No Answer for number $number")
-            }
-        }
-    }
-}
+data class Answer(
+    val value: Int,
+    val explanation: String?,
+)
 
 data class CandidatesResponse(
     val pageProps: CandidatesResponsePageProps
@@ -113,7 +104,7 @@ data class CandidateResponsePageProps(
         questions.associateWith { question ->
             val candidateQuestion =
                 answers.flatMap { it.questions }.find { it.questionId == question.id } ?: CandidateQuestion.EMPTY
-            Answer.valueOfNumber(candidateQuestion.answer)
+            Answer(candidateQuestion.answer, candidateQuestion.explanation)
         }.toSortedMap()
 }
 
@@ -128,15 +119,16 @@ data class CandidateQuestion(
     val questionId: Int,
     val text: String,
     val answer: Int,
-    val explanation: String,
+    val explanation: String?,
 ) {
     companion object {
-        val EMPTY = CandidateQuestion("", "", 0, "", 0, "")
+        val EMPTY = CandidateQuestion("", "", 0, "", 0, null)
     }
 }
 
 data class TransformedCandidateInformation(
     val id: String,
+    val candidateNumber: Int,
     val firstName: String,
     val lastName: String,
     val age: Int,

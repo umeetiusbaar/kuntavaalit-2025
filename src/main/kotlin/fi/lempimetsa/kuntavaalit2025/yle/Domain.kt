@@ -14,6 +14,8 @@ data class Constituency(
         val PIRKKALA = Constituency(301, "Pirkkala", "604")
         val TAMPERE = Constituency(228, "Tampere", "837")
         val CONSTITUENCIES = listOf(LEMPAALA, PIRKKALA, TAMPERE)
+
+        fun valueOfName(name: String) = CONSTITUENCIES.first { it.name.equals(name, true) }
     }
 }
 
@@ -26,12 +28,11 @@ data class Candidate(
     @SerializedName("party_id")
     val partyId: Int,
     val party: Party,
+    @SerializedName("election_number")
+    val electionNumber: Int,
     val answers: Map<String, Answer>?,
     val mediapartnerAnswers: Map<String, Answer>?,
 ) : Comparable<Candidate> {
-
-    fun fullName() = fi.lempimetsa.kuntavaalit2025.fullName(firstName, lastName)
-
     override fun compareTo(other: Candidate): Int = compareValuesBy(this, other, { it.lastName }, { it.firstName })
 }
 
@@ -57,17 +58,22 @@ data class Question(
     val id: Int,
     @SerializedName("text_fi")
     val text: String,
-): Comparable<Question> {
+) : Comparable<Question> {
     override fun compareTo(other: Question): Int = compareValuesBy(this, other) { it.id }
 }
 
 data class Answer(
     val answer: Int,
+    @SerializedName("explanation_fi")
+    val explanationFi: String?,
+    @SerializedName("explanation_sv")
+    val explanationSv: String?,
+    @SerializedName("explanation_en")
+    val explanationEn: String?,
 ) {
     companion object {
-        val EMPTY = Answer(0)
+        val EMPTY = Answer(0, null, null, null)
     }
 
-    fun agree() = answer > 3
-    fun disagree() = answer < 3
+    fun explanation() = explanationFi ?: explanationSv ?: explanationEn
 }

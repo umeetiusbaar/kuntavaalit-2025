@@ -1,5 +1,6 @@
 val ktor_version: String by project
 val jackson_version: String by project
+val ksoup_version: String by project
 val kotlin_logging_version: String by project
 val logback_version: String by project
 
@@ -22,6 +23,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-gson:$ktor_version")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jackson_version")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version")
+    implementation("com.mohamedrejeb.ksoup:ksoup-html:$ksoup_version")
 
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlin_logging_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
