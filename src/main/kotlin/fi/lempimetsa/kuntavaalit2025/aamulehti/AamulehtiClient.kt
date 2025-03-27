@@ -35,6 +35,9 @@ class AamulehtiClient {
     }
 
     suspend fun candidateQuestions(candidate: Candidate): CandidateResponsePageProps {
+        if (buildId == null) {
+            initializeBuildId()
+        }
         val response: CandidateResponse =
             client.get("https://www.vaalikone.fi/_next/data/$buildId/kunta2025/al/candidates/${candidate.id}.json?election=kunta2025&brand=al&id=${candidate.id}")
                 .body()

@@ -9,7 +9,7 @@ class VaalikoneResultsServiceITest {
 
     @Test
     fun questionsAndAnswers() = runBlocking {
-        val questionsAndAnswers = service.questionsAndAnswers(Municipality.LEMPAALA, INTERESTING_QUESTION_FILTER)
+        val questionsAndAnswers = service.questionsAndAnswers(Municipality.TAMPERE, INTERESTING_QUESTION_FILTER)
         printQuestionsAndAnswers(questionsAndAnswers)
     }
 }

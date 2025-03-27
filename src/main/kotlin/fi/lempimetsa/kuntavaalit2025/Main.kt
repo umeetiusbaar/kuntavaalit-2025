@@ -84,7 +84,7 @@ fun printMedianAnswers(answers: SortedMap<Candidate, SortedMap<Question, Answer>
         }
     }
     println()
-    println("Ehdokkaat keskimäärin\t\t\t${medianAnswers.values.joinToString("\t") { med(it).toString() }}")
+    println("Ehdokkaat keskimäärin\t\t\t${medianAnswers.values.joinToString("\t") { String.format("%.1f", it.avg()) }}")
 }
 
 fun printPartyMedians(
@@ -111,11 +111,11 @@ fun printPartyMedians(
         println(
             "$party\t\t\t${
                 partyMedianAnswers.values.joinToString("\t") {
-                    val med = med(it[party])
+                    val med = it[party].avg()
                     when {
-                        med == 10 -> "x"
-                        med == 11 -> ""
-                        med > 0 -> med.toString()
+                        med == 10.0 -> "x"
+                        med == 11.0 -> ""
+                        med > 0 -> String.format("%.1f", med)
                         else -> ""
                     }
                 }

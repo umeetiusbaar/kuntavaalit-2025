@@ -1,14 +1,6 @@
 package fi.lempimetsa.kuntavaalit2025
 
-fun med(list: List<Int>?) = list?.sorted()?.let {
-    val size = it.size
-    if (size % 2 == 0) {
-        (it[size / 2 - 1] + it[size / 2]) / 2
-    } else {
-        it[size / 2]
-    }
-}
-    ?: 0
+fun List<Int>?.avg() = this?.average() ?: 0.0
 
 fun fullName(firstName: String, lastName: String): String = "$firstName $lastName"
 
