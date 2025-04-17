@@ -77,3 +77,22 @@ data class Answer(
 
     fun explanation() = explanationFi ?: explanationSv ?: explanationEn
 }
+
+data class CandidateResultsResponse(
+    val data: CandidateResultsResponseData,
+)
+
+data class CandidateResultsResponseData(
+    val candidateResults: List<CandidateResult>
+)
+
+data class CandidateResult(
+    val caid: Int,
+    val electedInformation: ElectedInformation,
+)
+
+enum class ElectedInformation(val isElected: Boolean, val isOnSubstitutePlace: Boolean) {
+    ELECTED(true, false),
+    ON_SUBSTITUTE_PLACE(false, true),
+    NOT_ELECTED(false, false);
+}

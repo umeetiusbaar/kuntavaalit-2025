@@ -34,6 +34,7 @@ enum class Party() {
     LIIK,
     PS,
     RA,
+    RAYL,
     RKP,
     SDP,
     SKP,
@@ -63,6 +64,8 @@ data class Candidate(
     val lastName: String,
     val number: Int,
     val party: Party,
+    val elected: Boolean? = null,
+    val substitutePlace: Boolean? = null,
 ) : Comparable<Candidate> {
 
     fun fullName() = fullName(firstName, lastName)
@@ -159,6 +162,30 @@ enum class FacebookQuestionOption {
         JARJESTELYRATAPIHA -> Question(Source.FACEBOOK, 3, "Mikä tai mitkä maakuntakaavan suurhankkeista tulisi sinun mielestä toteuttaa Lempäälän ja Pirkkalan väliselle LemPi-metsäalueelle? 3. Järjestelyratapiha, oikorata, multimodaali logistiikkakeskittymä")
         RAUTATIETUNNELI -> Question(Source.FACEBOOK, 4, "Mikä tai mitkä maakuntakaavan suurhankkeista tulisi sinun mielestä toteuttaa Lempäälän ja Pirkkalan väliselle LemPi-metsäalueelle? 4. Rautatietunneli Peltolammilta lentoasemalle")
         EI_MITAAN -> Question(Source.FACEBOOK, 5, "Mikä tai mitkä maakuntakaavan suurhankkeista tulisi sinun mielestä toteuttaa Lempäälän ja Pirkkalan väliselle LemPi-metsäalueelle? 5. Ei mitään näistä")
+    }
+}
+
+enum class Result {
+    ELECTED,
+    ON_SUBSTITUTE_PLACE,
+    NOT_ELECTED;
+
+    companion object {
+        fun valueOfResults(elected: Boolean, substitutePlace: Boolean): Result {
+            return when {
+                elected -> ELECTED
+                substitutePlace -> ON_SUBSTITUTE_PLACE
+                else -> NOT_ELECTED
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return when (this) {
+            ELECTED -> "X"
+            ON_SUBSTITUTE_PLACE -> ""
+            NOT_ELECTED -> ""
+        }
     }
 }
 

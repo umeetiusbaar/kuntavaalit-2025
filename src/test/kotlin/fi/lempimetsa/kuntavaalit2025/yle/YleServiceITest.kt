@@ -13,4 +13,9 @@ class YleServiceITest {
     fun questionsAndAnswers() = runBlocking {
         println(service.questionsAndAnswers(Municipality.LEMPAALA))
     }
+
+    @Test
+    fun candidateResults() = runBlocking {
+        println(service.candidateResults(Municipality.LEMPAALA))
+    }
 }

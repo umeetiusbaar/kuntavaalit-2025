@@ -77,4 +77,10 @@ class YleService : VaalikoneService {
         }
         return answers
     }
+
+    suspend fun candidateResults(municipality: Municipality): List<CandidateResult> {
+        val constituency = Constituency.valueOfName(municipality.title)
+        val municipalityId = constituency.officialId.toInt()
+        return client.candidateResults(municipalityId).data.candidateResults
+    }
 }

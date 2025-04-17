@@ -6,11 +6,12 @@ import fi.lempimetsa.kuntavaalit2025.lvs.LVSService
 import fi.lempimetsa.kuntavaalit2025.mtv.MTVService
 import fi.lempimetsa.kuntavaalit2025.pirkkalainen.PirkkalainenService
 import fi.lempimetsa.kuntavaalit2025.tamperelainen.TamperelainenService
+import fi.lempimetsa.kuntavaalit2025.yle.ElectedInformation
 import fi.lempimetsa.kuntavaalit2025.yle.YleService
 import java.util.SortedMap
 import java.util.TreeMap
 
-class VaalikoneResultsService {
+class VaalikoneAnswersService {
 
     private val lvsService = LVSService()
     private val pirkkalainenService = PirkkalainenService()
@@ -55,6 +56,31 @@ class VaalikoneResultsService {
         candidatesAndAnswers.addAll(mtvQuestionsAndAnswers?.second)
         candidatesAndAnswers.addAll(facebookQuestionsAndAnswers.second)
         return Pair(questions, candidatesAndAnswers)
+    }
+
+    suspend fun results(municipality: Municipality): Map<Int, Result> {
+        val candidateResults = yleService.candidateResults(municipality)
+        return candidateResults.associate { candidateResult ->
+            val result =
+            if (municipality == Municipality.LEMPAALA) {
+                if (candidateResult.caid == 26) {
+                    // Tirkkonen (kesk.) is not elected
+                    candidateResult.copy(26, ElectedInformation.NOT_ELECTED)
+                } else if (candidateResult.caid == 24) {
+                    // Tappura (kesk.) is elected
+                    candidateResult.copy(24, ElectedInformation.ELECTED)
+                } else candidateResult
+            } else if (municipality == Municipality.PIRKKALA) {
+                if (candidateResult.caid == 21) {
+                    // Auer (kesk.) is not elected
+                    candidateResult.copy(21, ElectedInformation.NOT_ELECTED)
+                } else if (candidateResult.caid == 28) {
+                    // Naskali (kesk.) is elected
+                    candidateResult.copy(28, ElectedInformation.ELECTED)
+                } else candidateResult
+            } else candidateResult
+            Pair(result.caid, Result.valueOfResults(result.electedInformation.isElected, result.electedInformation.isOnSubstitutePlace))
+        }
     }
 }
 

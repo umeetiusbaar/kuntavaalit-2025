@@ -2,6 +2,15 @@ package fi.lempimetsa.kuntavaalit2025
 
 fun List<Int>?.avg() = this?.average() ?: 0.0
 
+fun List<Int>?.med(): Int = this?.sorted()?.let {
+    val size = it.size
+    if (size % 2 == 0) {
+        (it[size / 2 - 1] + it[size / 2]) / 2
+    } else {
+        it[size / 2]
+    }
+} ?: 0
+
 fun fullName(firstName: String, lastName: String): String = "$firstName $lastName"
 
 fun String.adjustFirstName(municipality: Municipality, lastName: String): String {

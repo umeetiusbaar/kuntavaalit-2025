@@ -16,20 +16,24 @@ class YleClient {
     }
 
     companion object {
-        const val BASE_URL = "https://vaalit.yle.fi/vaalikone/alue-ja-kuntavaalit2025/api/public"
+        const val VAALIKONE_BASE_URL = "https://vaalit.yle.fi/vaalikone/alue-ja-kuntavaalit2025/api/public"
+        const val RESULTS_BASE_URL = "https://vaalit.yle.fi/content/kv2025"
     }
 
-    suspend fun constituencies(): List<Constituency> = client.get("$BASE_URL/municipality/constituencies").body()
+    suspend fun constituencies(): List<Constituency> = client.get("$VAALIKONE_BASE_URL/municipality/constituencies").body()
 
     suspend fun candidates(constituencyId: Int): List<Candidate> =
-        client.get("$BASE_URL/municipality/constituencies/$constituencyId/candidates").body()
+        client.get("$VAALIKONE_BASE_URL/municipality/constituencies/$constituencyId/candidates").body()
 
     suspend fun parties(constituencyId: Int): List<Party> =
-        client.get("$BASE_URL/municipality/constituencies/$constituencyId/parties").body()
+        client.get("$VAALIKONE_BASE_URL/municipality/constituencies/$constituencyId/parties").body()
 
     suspend fun questions(constituencyId: Int): List<Category> =
-        client.get("$BASE_URL/municipality/constituencies/$constituencyId/questions").body()
+        client.get("$VAALIKONE_BASE_URL/municipality/constituencies/$constituencyId/questions").body()
 
     suspend fun candidate(constituencyId: Int, candidateId: Int): Candidate =
-        client.get("$BASE_URL/municipality/constituencies/$constituencyId/candidates/$candidateId").body()
+        client.get("$VAALIKONE_BASE_URL/municipality/constituencies/$constituencyId/candidates/$candidateId").body()
+
+    suspend fun candidateResults(municipalityId: Int): CandidateResultsResponse =
+        client.get("$RESULTS_BASE_URL/94/electorates/8/municipalities/$municipalityId/candidateResults.json").body()
 }

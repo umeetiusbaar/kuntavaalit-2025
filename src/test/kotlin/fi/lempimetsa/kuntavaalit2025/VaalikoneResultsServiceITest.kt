@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 class VaalikoneResultsServiceITest {
 
-    private val service = VaalikoneResultsService()
+    private val service = VaalikoneAnswersService()
 
     @Test
     fun questionsAndAnswers() = runBlocking {
